@@ -1,4 +1,12 @@
-.git/
+__pycache__/
+.pi-lens/
 build/
 dist/
-BongoCatClicker.spec
+*.pyc
+*.exe
+*.exe.old
+*.spec
+chest_capture_full.png
+BongoCatMod-patched.dll
+BongoCatMod-patched/
+debug_bongo_*
