@@ -3,6 +3,4 @@ pywin32
 keyboard
 customtkinter
 pillow
-pyautogui
 pystray
-pyinstaller
