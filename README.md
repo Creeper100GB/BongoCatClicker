@@ -1,24 +1,29 @@
-# 🐱 Bongo Cat Bot
+# Bongo Cat Clicker
+
 A script that automatically presses keys in Bongo Cat.
+
 ## Requirements
 
 - Python 3.x
 - Bongo Cat (Steam)
 
 ## Installation
+
 Install the required libraries:
+
 ```
-pip install pydirectinput pywin32 keyboard
+pip install pywin32 customtkinter pillow pystray
 ```
+
 ## Usage
 
 - Open Bongo Cat
 - Run the script
-- Press P to start/stop the bot
+- Press F6 (default hotkey, configurable in the GUI) to start/stop the bot
 - Close the window to exit
 
 ## Notes
 
-- Make sure the BONGO_WINDOW_TITLE in the script matches your Bongo Cat window title exactly
-- Bongo Cat must be open before pressing Start
-- You can't use your PC normally while the bot is running since Bongo Cat needs to stay in focus
+- Bongo Cat must be open and in the foreground before pressing Start
+- The bot re-focuses Bongo Cat automatically, but you can't use your PC
+  normally while it runs since Bongo Cat needs to stay in focus

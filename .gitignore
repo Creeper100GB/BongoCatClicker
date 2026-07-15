@@ -1,12 +1,11 @@
 __pycache__/
 .pi-lens/
+.ruff_cache/
 build/
 dist/
 *.pyc
 *.exe
 *.exe.old
 *.spec
-chest_capture_full.png
-BongoCatMod-patched.dll
-BongoCatMod-patched/
-debug_bongo_*
+*.png
+bongoclicker.log

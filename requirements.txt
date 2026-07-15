@@ -1,4 +1,3 @@
-pydirectinput
 pywin32
 keyboard
 customtkinter
