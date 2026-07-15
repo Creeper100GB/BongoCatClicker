@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import random
-import sys
 import threading
 import time
 from ctypes import wintypes
@@ -17,10 +16,7 @@ except Exception:
         pass
 
 import customtkinter as ctk
-import win32api
-import win32event
 import win32gui
-import winerror
 from PIL import Image, ImageDraw
 
 try:
@@ -123,8 +119,6 @@ LOG_PATH = os.path.join(SCRIPT_DIR, "bongoclicker.log")
 _fh = logging.FileHandler(LOG_PATH, encoding="utf-8")
 _fh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
 log.addHandler(_fh)
-
-MUTEX_NAME = "Global\\BongoCatClickerSingleInstance"
 
 BONGO_TITLES = ["BongoCat", "Bongo Cat"]
 EXCLUDE_TITLES = ["clicker", "bot"]
@@ -533,12 +527,14 @@ class App(ctk.CTk):
 
         self.title("Bongo Cat Clicker")
         self.geometry("420x500")
+        self.attributes("-topmost", True)
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self._on_close)
         self._build()
         self._fit_height()
         self._reg_hotkey()
         self._diag_poll()
+        self._focus_guard()
 
         self.bind("<<ShowFromTray>>", lambda e: self._show_window())
         self.bind("<<QuitFromTray>>", lambda e: self._on_quit_from_tray())
@@ -973,6 +969,16 @@ class App(ctk.CTk):
             pass
         self._diag_id = self.after(500, self._diag_poll)
 
+    def _focus_guard(self):
+        if not self._alive:
+            return
+        try:
+            self.lift()
+            self.focus_force()
+        except Exception:
+            pass
+        self._focus_guard_id = self.after(3000, self._focus_guard)
+
     def _setup_tray(self):
         try:
             import pystray
@@ -1033,7 +1039,13 @@ class App(ctk.CTk):
                 self.after_cancel(self._diag_id)
             except Exception:
                 pass
-            self._diag_id = None
+        self._diag_id = None
+        if self._focus_guard_id is not None:
+            try:
+                self.after_cancel(self._focus_guard_id)
+            except Exception:
+                pass
+        self._focus_guard_id = None
         try:
             self.quit()
             self.destroy()
@@ -1046,23 +1058,6 @@ class App(ctk.CTk):
         self.focus_force()
 
 
-def _single_instance():
-    try:
-        handle = win32event.CreateMutex(None, False, MUTEX_NAME)
-        if win32api.GetLastError() == winerror.ERROR_ALREADY_EXISTS:
-            return None
-        return handle
-    except Exception:
-        return True
-
-
 if __name__ == "__main__":
-    mutex = _single_instance()
-    if mutex is None:
-        import tkinter.messagebox as mb
-
-        mb.showwarning("Bongo Cat Clicker", "Bongo Cat Clicker laeuft bereits.")
-        sys.exit(0)
     app = App()
-    app._mutex = mutex
     app.mainloop()
